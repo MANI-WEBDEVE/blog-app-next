@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model
+model User {
+  id String @id @default(cuid())
+  clerkId String @unique
+  name String
+  email String @unique
+  image String?
+  artical Artical[]
+  comments Comments[]
+  likes Likes[]
+}
+
+// Artical Model
+model Artical {
+  id String @id @default(cuid())
+  title String
+  content String
+  category String 
+  featuredImage String
+  author User @relation(fields: [authorId], references: [id])
+  authorId String
+  comments Comments[]
+  likes Likes[]
+  createdAt DateTime @default(now())
+}
+
+model Comments {
+  id String @id @default(cuid())
+  content String
+  author User @relation(fields: [userCommentId], references: [id])
+  userCommentId String
+  artical Artical @relation(fields: [articalId], references: [id])
+  articalId String
+  createAt DateTime @default(now())
+}
+
+model Likes {
+  id String @id @default(cuid())
+  author User @relation(fields: [authorId], references: [id])
+  authorId String
+  artical Artical @relation(fields: [articalId],references: [id])
+  articalId String
+
+  @@unique([authorId, articalId]) // to check user is only one time like 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
